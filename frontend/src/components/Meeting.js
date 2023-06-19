@@ -8,27 +8,23 @@ import {
 import { Fragment } from 'react'
 
 
-export default function Meeting({ meeting }) {
-    let startDateTime = parseISO(meeting.startDatetime)
-    let endDateTime = parseISO(meeting.endDatetime)
+export default function Meeting({ schedule }) {
+    let startDateTime = parseISO(schedule.startHour)
+    let endDateTime = parseISO(schedule.endHour)
   
     return (
       <li className="flex items-center px-4 py-2 space-x-4 group rounded-xl focus-within:bg-gray-100 hover:bg-gray-100">
         <img
-          src={meeting.imageUrl}
+          src={schedule.imageUrl}
           alt=""
           className="flex-none w-10 h-10 rounded-full"
         />
         <div className="flex-auto">
-          <p className="text-gray-900">{meeting.name}</p>
+          <p className="text-gray-900">{schedule.text}</p>
           <p className="mt-0.5">
-            <time dateTime={meeting.startDatetime}>
-              {format(startDateTime, 'h:mm a')}
-            </time>{' '}
+          {schedule.startHour}{' '}
             -{' '}
-            <time dateTime={meeting.endDatetime}>
-              {format(endDateTime, 'h:mm a')}
-            </time>
+            {schedule.endHour}
           </p>
         </div>
         <Menu
@@ -75,7 +71,7 @@ export default function Meeting({ meeting }) {
                         'block px-4 py-2 text-sm'
                       )}
                     >
-                      Cancel
+                      Delete
                     </a>
                   )}
                 </Menu.Item>

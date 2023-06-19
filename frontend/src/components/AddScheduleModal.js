@@ -9,7 +9,7 @@ const AddScheduleModal = ({ closeModal, selectedDay }) => {
 
     const [formData, setFormData] = useState({
         text: '',
-        day: format(selectedDay, 'MMM dd, yyy'),
+        day: selectedDay,
         startHour: '',
         endHour: '',
     })

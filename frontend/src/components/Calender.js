@@ -13,9 +13,12 @@ import {
   parseISO,
   startOfToday,
 } from 'date-fns'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import Meeting from './Meeting'
 import AddScheduleModal from './AddScheduleModal'
+import { useNavigate } from 'react-router-dom'
+import { useSelector, useDispatch } from 'react-redux'
+import { getSchedules, reset } from '../features/schedules/scheduleSlice'
 
 const meetings = [
     {
@@ -65,8 +68,36 @@ const meetings = [
   }
 
   export default function Calender() {
+
+    const navigate = useNavigate()
+    const dispatch = useDispatch()
+
+    const { user } = useSelector((state) => state.auth)
+    const {schedules, isLoading, isError, message} = useSelector((state) => state.schedules)
+
+    useEffect(() => {
+      if(isError) {
+        console.log(message)
+      }
+
+      if(!user) {
+        navigate('/login')
+      }
+
+      dispatch(getSchedules())
+
+      return () => {
+        dispatch(reset())
+      }
+    }, [user, navigate, isError, message, dispatch])
+
+
+
+
+
+
+
     let today = startOfToday()
-    // console.log(format(today, 'MMM dd, yyy'))
     let [showCreateModal, setShowCreateModal] = useState(false)
     let [selectedDay, setSelectedDay] = useState(today)
     let [currentMonth, setCurrentMonth] = useState(format(today, 'MMM-yyyy'))
@@ -92,8 +123,8 @@ const meetings = [
       setCurrentMonth(format(firstDayNextMonth, 'MMM-yyyy'))
     }
   
-    let selectedDayMeetings = meetings.filter((meeting) =>
-      isSameDay(parseISO(meeting.startDatetime), selectedDay)
+    let selectedDayMeetings = schedules.filter((schedule) =>
+      isSameDay(parseISO(schedule.day), selectedDay)
     )
   
     return (
@@ -172,8 +203,8 @@ const meetings = [
                     </button>
   
                     <div className="w-1 h-1 mx-auto mt-1">
-                      {meetings.some((meeting) =>
-                        isSameDay(parseISO(meeting.startDatetime), day)
+                      {schedules.some((schedule) =>
+                        isSameDay(parseISO(schedule.day), day)
                       ) && (
                         <div className="w-1 h-1 rounded-full bg-sky-500"></div>
                       )}
@@ -195,8 +226,8 @@ const meetings = [
               
               <ol className="mt-4 space-y-1 text-sm leading-6 text-gray-500">
                 {selectedDayMeetings.length > 0 ? (
-                  selectedDayMeetings.map((meeting) => (
-                    <Meeting meeting={meeting} key={meeting.id} />
+                  selectedDayMeetings.map((schedule) => (
+                    <Meeting schedule={schedule} key={schedule._id} />
                   ))
                 ) : (
                   <p>No meetings for today.</p>
