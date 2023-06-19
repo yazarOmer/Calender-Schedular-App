@@ -47,14 +47,14 @@ const updateSchedule = asyncHandler(async (req, res) => {
         throw new Error('Schedule bulunamadı')
     }
 
-    const user = await User.findById(req.user.id)
+    // const user = await User.findById(req.user.id)
 
-    if(!user) {
+    if(!req.user) {
         res.status(401)
         throw new Error('Kullanıcı bulunamadı')
     }
 
-    if(schedule.user.toString() !== user.id) {
+    if(schedule.user.toString() !== req.user.id) {
         res.status(401)
         throw new Error('Kullanıcı girişi yapılmadı')
     }
@@ -78,14 +78,13 @@ const deleteSchedule = asyncHandler(async (req, res) => {
         throw new Error('Schedule bulunamadı')
     }
 
-    const user = await User.findById(req.user.id)
 
-    if(!user) {
+    if(!req.user) {
         res.status(401)
         throw new Error('Kullanıcı bulunamadı')
     }
 
-    if(schedule.user.toString() !== user.id) {
+    if(schedule.user.toString() !== req.user.id) {
         res.status(401)
         throw new Error('Kullanıcı girişi yapılmadı')
     }
