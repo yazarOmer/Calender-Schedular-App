@@ -89,7 +89,7 @@ const meetings = [
       return () => {
         dispatch(reset())
       }
-    }, [user, navigate, isError, message, dispatch])
+    }, [user, navigate, isLoading, isError, message, dispatch])
 
 
 
